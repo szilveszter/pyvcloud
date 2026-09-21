@@ -1665,19 +1665,24 @@ class VM(object):
     def add_extra_config_element(self, key, value, required=False):
         """Add vmw:ExtraConfig element.
 
+        Creates the first extra config entry when none exist yet.
+
         :param str key: name of the extra config key
         :param str value: value of extra config
         :param bool required: if mandatory to specify during ovf deployment
-        :return:
         :return: an object containing EntityType.TASK XML data which represents
             the asynchronous task that updates the vm.
         :rtype: lxml.objectify.ObjectifiedElement
+        :raises InvalidStateException: if the VM resource has no virtual
+            hardware section.
         """
         vm_resource = self.get_resource()
-        current_element = vm_resource.find(
-            'ovf:VirtualHardwareSection/vmw:ExtraConfig',
-            NSMAP
-        )
+        hardware_section = vm_resource.find(
+            'ovf:VirtualHardwareSection', NSMAP)
+        if hardware_section is None:
+            raise InvalidStateException(
+                'VM resource does not contain a VirtualHardwareSection.')
+        current_element = hardware_section.find('vmw:ExtraConfig', NSMAP)
         new_element = E_VMW(f"{{{NSMAP['vmw']}}}ExtraConfig")
         new_element.set(
             f"{{{NSMAP['vmw']}}}key",
@@ -1688,7 +1693,10 @@ class VM(object):
             f"{{{NSMAP['ovf']}}}required",
             str(required).lower()
         )
-        current_element.addnext(new_element)
+        if current_element is None:
+            hardware_section.append(new_element)
+        else:
+            current_element.addnext(new_element)
         reconfigure_vm_link = find_link(
             self.resource,
             RelationType.RECONFIGURE_VM,

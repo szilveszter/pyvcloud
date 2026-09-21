@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Fix adding VM extra configuration when no ExtraConfig elements exist
 * Support API versions 37.0, 37.1, and 37.2 in both clients and version negotiation
 * Respect deprecated API versions during server version discovery
 
