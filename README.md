@@ -4,7 +4,21 @@
 
 `pyvcloud` is the Python SDK for VMware vCloud Director.
 
-Supported API versions are 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0, 36.0.
+Supported API versions are 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0, 36.0,
+37.0, 37.1, and 37.2.
+
+API 37.2 corresponds to [VMware Cloud Director 10.4.2](https://docs.vmware.com/en/VMware-Cloud-Director/10.4.2/rn/vmware-cloud-director-1042-release-notes/index.html).
+Both `Client` and `VcdClient` automatically select the highest non-deprecated
+production API version supported by the server and this SDK. To explicitly
+select API 37.2, pass `api_version=ApiVersion.VERSION_37_2.value` (or `'37.2'`)
+to the client constructor:
+
+```python
+from pyvcloud.vcd.client import ApiVersion, Client
+
+client = Client('https://vcd.example.com',
+                api_version=ApiVersion.VERSION_37_2.value)
+```
 
 ## Installation
 
@@ -19,6 +33,15 @@ may need additional packages to install successfully. See
 ## Testing
 
 Contributions to `pyvcloud` are welcome and it should include unit tests. See the [contributing guide](CONTRIBUTING.md) for details.
+
+Run the offline unit tests without a VCD server or credentials:
+
+```shell
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+`tox` runs these tests and the SDK's style checks. The integration tests below
+require a configured VCD server.
 
 Check out the latest version and install:
 

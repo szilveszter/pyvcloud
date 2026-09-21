@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+* Support API versions 37.0, 37.1, and 37.2 in both clients and version negotiation
+* Respect deprecated API versions during server version discovery
+
+23.0.4
+------
+
 * Add version objects enum
 * Address review comments
 * Add vcd api version file

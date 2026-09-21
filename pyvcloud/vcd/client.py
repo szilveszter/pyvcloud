@@ -116,6 +116,9 @@ class ApiVersion(Enum):
     VERSION_35 = '35.0'
     VERSION_36 = '36.0'
     VERSION_37_ALPHA = '37.0.0-alpha'
+    VERSION_37 = '37.0'
+    VERSION_37_1 = '37.1'
+    VERSION_37_2 = '37.2'
 
 
 class VcdApiVersionObj(Enum):
@@ -128,6 +131,9 @@ class VcdApiVersionObj(Enum):
     VERSION_35 = VCDApiVersion(ApiVersion.VERSION_35.value)
     VERSION_36 = VCDApiVersion(ApiVersion.VERSION_36.value)
     VERSION_37_ALPHA = VCDApiVersion(ApiVersion.VERSION_37_ALPHA.value)
+    VERSION_37 = VCDApiVersion(ApiVersion.VERSION_37.value)
+    VERSION_37_1 = VCDApiVersion(ApiVersion.VERSION_37_1.value)
+    VERSION_37_2 = VCDApiVersion(ApiVersion.VERSION_37_2.value)
 
 
 # Important! Values must be listed in ascending order.
@@ -139,7 +145,10 @@ API_CURRENT_VERSIONS = [
     ApiVersion.VERSION_33.value,
     ApiVersion.VERSION_34.value,
     ApiVersion.VERSION_35.value,
-    ApiVersion.VERSION_36.value
+    ApiVersion.VERSION_36.value,
+    ApiVersion.VERSION_37.value,
+    ApiVersion.VERSION_37_1.value,
+    ApiVersion.VERSION_37_2.value
 ]
 
 
@@ -152,7 +161,10 @@ VCD_API_CURRENT_VERSIONS = [
     VcdApiVersionObj.VERSION_34.value,
     VcdApiVersionObj.VERSION_35.value,
     VcdApiVersionObj.VERSION_36.value,
-    VcdApiVersionObj.VERSION_37_ALPHA.value
+    VcdApiVersionObj.VERSION_37_ALPHA.value,
+    VcdApiVersionObj.VERSION_37.value,
+    VcdApiVersionObj.VERSION_37_1.value,
+    VcdApiVersionObj.VERSION_37_2.value
 ]
 
 
@@ -953,13 +965,11 @@ class Client(object):
                 # numbers that drop non-significant digits. For example, 5.10
                 # becomes 5.1.  This transformation corrupts the version.
 
-                if not hasattr(version, 'deprecated') or \
-                   version.get('deprecated').lower() == 'false':
+                if version.get('deprecated', 'false').lower() == 'false':
                     active_versions.append(str(version.Version.text))
             if include_alpha_versions and hasattr(versions, "AlphaVersion"):
                 for version in versions.AlphaVersion:
-                    if not hasattr(version, 'deprecated') or \
-                            version.get('deprecated') == 'false':
+                    if version.get('deprecated', 'false').lower() == 'false':
                         # alpha version may be of the form `3X.0.0-alpha-12345`
                         # so we remove the portion after "alpha"
                         alpha_version = str(version.Version.text)

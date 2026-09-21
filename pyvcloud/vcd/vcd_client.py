@@ -57,9 +57,9 @@ class OpenApiLink(object):
 class VcdClient(Client, ApiClient):
     """A client to interact with the vCloud Director OpenAPI & Legacy Api.
 
-    Client defaults to the highest API version supported by vCloud Director
-    when api_Version is not provided. You can also set the version explicitly
-    using the api_version parameter.
+    Client defaults to the highest non-deprecated production API version
+    supported by both vCloud Director and pyvcloud when api_version is not
+    provided. You can also set the version explicitly using api_version.
 
     :param str uri: vCD server host name or connection URI.
     :param str api_version: vCD API version to use.
